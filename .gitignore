@@ -2,6 +2,7 @@
 .classpath
 .project
 .prefs
+project.properties
 #Vim files
 *.swp
 #We don't need the build files
