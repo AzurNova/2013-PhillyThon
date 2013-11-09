@@ -1,0 +1,10 @@
+#Personal stuff
+.classpath
+.project
+.prefs
+#Vim files
+*.swp
+#We don't need the build files
+bin/*
+#We don't care about the windows thumbnail cache
+Thumbs.db
