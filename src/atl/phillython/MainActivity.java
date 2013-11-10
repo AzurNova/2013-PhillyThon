@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -38,10 +39,12 @@ public class MainActivity extends FragmentActivity implements
         private TextView longitudeField;
         private LocationManager locationManager;
         private String provider;
-        private PolylineOptions rectOptions;
+        private PolylineOptions polyOp;
         private Polyline polyline;
         private POI_Collector pointCollector;
         private List<Marker> pointMarkers;
+        private Location currentLocation, lastLocation;
+        private int num = 1;
 
         private static final String DATAFILENAME = "locationdb.txt";
         private static final double MAX_DISTANCE = 1000.0;
@@ -52,7 +55,7 @@ public class MainActivity extends FragmentActivity implements
                 super.onCreate(savedInstanceState);
                 setContentView(R.layout.activity_main);
 
-        createPersistentNotification();
+                createPersistentNotification();
                 
                 latitudeField = (TextView) findViewById(R.id.TextView02);
                 longitudeField = (TextView) findViewById(R.id.TextView04);
@@ -63,7 +66,16 @@ public class MainActivity extends FragmentActivity implements
 
                 // PathTracker.firstPoint(new LatLng(location.getLatitude(),
                 // location.getLongitude()), googleMap);
-
+				try {
+					// Loading map
+					initializePoints();
+					initializeMap();
+					initializeClickListener();
+			
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+                
                 if (location != null) {
                         System.out.println("Provider " + provider + " has been selected.");
                         onLocationChanged(location);
@@ -72,15 +84,7 @@ public class MainActivity extends FragmentActivity implements
                         longitudeField.setText("Location not available");
                 }
 
-                try {
-                        // Loading map
-                        initializePoints();
-                        initializeMap();
-                        initializeClickListener();
 
-                } catch (Exception e) {
-                        e.printStackTrace();
-                }
 
         }
 
@@ -131,60 +135,63 @@ public class MainActivity extends FragmentActivity implements
 
                         googleMap.setMyLocationEnabled(true);
                         
-                        getMarkersFromPoints(locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER));
-                
+                        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                        getMarkersFromPoints(location);
+                        
+                        currentLocation = new Location(location);
+                        System.out.println("initialization currentLocation" + currentLocation);
+                        
+		                polyOp = new PolylineOptions()
+		                  .add(new LatLng(location.getLatitude(),location.getLongitude()))
+		                  .width(5)
+		                  .color(Color.BLUE);
+                        polyline = googleMap.addPolyline(polyOp);
+                 
                 }
         }
 
         /**
          * Location Stuff
          */
-
+        public static LatLng locationToLatLng(Location loc) { 
+            if (loc != null) 
+                return new LatLng(loc.getLatitude(), loc.getLongitude());
+            return null;
+        }
         @Override
         public void onLocationChanged(Location location) {
                 // TODO Auto-generated method stub
-                double lat = (double) (location.getLatitude());
-                double lng = (double) (location.getLongitude());
-                latitudeField.setText(String.valueOf(lat));
+        		System.out.println("location Changed called");
+        		System.out.println("Hello");
+                System.out.println("lastLocation" + lastLocation);
+                System.out.println("currentLocation" + currentLocation);
+        		lastLocation = new Location(currentLocation);
+        		currentLocation = location;
+        		System.out.println("lastLocationafter" + lastLocation);
+                System.out.println("currentLocationafter" + currentLocation);
+                double lat = (double) (currentLocation.getLatitude());
+                double lng = (double) (currentLocation.getLongitude());
+                num++;
+                latitudeField.setText(String.valueOf(num));
+ //               latitudeField.setText(String.valueOf(lat));
                 longitudeField.setText(String.valueOf(lng));
+                System.out.println("setText fields");
                 
                 initializePoints();
                 List<PointOfInterest> pois = pointCollector.getNearbyPoints(new LatLng(
-                                location.getLatitude(), location.getLongitude()), 100);
+                                currentLocation.getLatitude(), currentLocation.getLongitude()), 100);
                 for (int i = 0; i < pois.size(); i++) {
                         createNotification(pois.get(i).getName(), pois.get(i).getDescription());
                 }
-                        
+                          
                 
-//                if (polyline != null) {
-//                        polyline.remove();
-//                }
-//                rectOptions.add(new LatLng(lat, lng));
-//                rectOptions.color(Color.BLUE);
-//                polyline = googleMap.addPolyline(rectOptions);
+                LatLng lastLatLng = locationToLatLng(lastLocation);
+                LatLng thisLatLng = locationToLatLng(currentLocation);
+                System.out.println(lastLatLng.latitude);
+                System.out.println(
+                thisLatLng.latitude);
+                googleMap.addPolyline(new PolylineOptions().add(lastLatLng).add(thisLatLng).width(8).color(Color.BLUE));
                 
-                
-                //clearMarkers();
-                //sgetMarkersFromPoints(location);
-                
-                // if (polyline != null) {
-                // polyline.remove();
-                // }
-                // rectOptions.add(new LatLng(lat, lng));
-                // rectOptions.color(Color.BLUE);
-                // polyline = googleMap.addPolyline(rectOptions);
-
-                // PathTracker.updatePoints(new LatLng(lat,lng), googleMap);
-                // Location myLocation = googleMap.getMyLocation();
-                // if(myLocation == null) {
-                // Toast.makeText(getApplicationContext(), "My location not available",
-                // Toast.LENGTH_LONG).show();
-                // } else {
-                // PolylineOptions polylineOptions = new PolylineOptions();
-                // polylineOptions.add(new LatLng(myLocation.getLatitude(),
-                // myLocation.getLongitude()));
-                // googleMap.addPolyline(polylineOptions);
-                // }
                 Log.i("locationchange", "changed location");
         }
 
