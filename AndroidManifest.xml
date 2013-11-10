@@ -29,12 +29,21 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="atl.phillython.MainActivity"
+            android:name="atl.phillython.MenuActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="atl.phillython.MainActivity"
+            android:label="Map" >
+            <intent-filter>
+                <action android:name="atl.phillython.MainActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
@@ -49,7 +58,7 @@
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyDhHJ5EGXAiPqrJjuZjEKI-H9qolZgoZF4" />
+            android:value="AIzaSyD6Y2Khxu4hR4xP5Tlye5lPR56Idgm4JjM" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
