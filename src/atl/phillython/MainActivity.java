@@ -45,7 +45,7 @@ public class MainActivity extends FragmentActivity implements LocationListener {
 	private List<Marker> pointMarkers;
 
 	private static final String DATAFILENAME = "locationdb.txt";
-	private static final double MAX_DISTANCE = 1000.0;
+	private static final double MAX_DISTANCE = 10000.0;
 	private int i = 0;
 
 	@Override
@@ -158,7 +158,7 @@ public class MainActivity extends FragmentActivity implements LocationListener {
 
 		initializePoints();
 		List<PointOfInterest> pois = pointCollector.getNearbyPoints(new LatLng(
-				location.getLatitude(), location.getLongitude()), 1000);
+				location.getLatitude(), location.getLongitude()), 10000);
 		for (int i = 0; i < pois.size(); i++) {
 			createNotification(pois.get(i).getName(), pois.get(i)
 					.getDescription(), pois.get(i).getPosition().latitude, pois
