@@ -1,6 +1,7 @@
 package atl.phillython;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -18,6 +19,8 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 public class MainActivity extends FragmentActivity implements LocationListener{
     private GoogleMap googleMap;
@@ -25,6 +28,8 @@ public class MainActivity extends FragmentActivity implements LocationListener{
     private TextView longitudeField;
     private LocationManager locationManager;
     private String provider;
+    private PolylineOptions rectOptions;
+    private Polyline polyline;
     
     
     @Override
@@ -38,6 +43,9 @@ public class MainActivity extends FragmentActivity implements LocationListener{
         Criteria criteria = new Criteria();
         provider = locationManager.getBestProvider(criteria, false);
         Location location = locationManager.getLastKnownLocation(provider);
+        
+ //       PathTracker.firstPoint(new LatLng(location.getLatitude(), location.getLongitude()), googleMap);
+        
         if (location != null) {
         	System.out.println("Provider " + provider + " has been selected.");
         	onLocationChanged(location);
@@ -93,11 +101,28 @@ public class MainActivity extends FragmentActivity implements LocationListener{
 	public void onLocationChanged(Location location) {
 		// TODO Auto-generated method stub
 		double lat = (double) (location.getLatitude());
-		double lng = (double) (location.getLongitude());
+		double lng = (double) (location.getLongitude());		
 		latitudeField.setText(String.valueOf(lat));
 		longitudeField.setText(String.valueOf(lng));
 		
+//		if (polyline != null) {
+//			polyline.remove();
+//		}
+//		rectOptions.add(new LatLng(lat, lng));
+//		rectOptions.color(Color.BLUE);
+//		polyline = googleMap.addPolyline(rectOptions);
 		
+		
+		
+//        PathTracker.updatePoints(new LatLng(lat,lng), googleMap);
+//	    Location myLocation = googleMap.getMyLocation();
+//	    if(myLocation == null) {
+//	    	Toast.makeText(getApplicationContext(), "My location not available", Toast.LENGTH_LONG).show();
+//	    } else {
+//			PolylineOptions polylineOptions = new PolylineOptions();
+//			polylineOptions.add(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
+//			googleMap.addPolyline(polylineOptions);
+//		}
 		Log.i("locationchange","changed location");
 	}
 

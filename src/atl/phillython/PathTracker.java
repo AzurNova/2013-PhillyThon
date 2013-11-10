@@ -12,7 +12,7 @@ public class PathTracker {
 	static ArrayList<PointOfInterest> pois = new ArrayList<PointOfInterest>();
 	
 	
-	public static void fistPoint(LatLng firstPoint, GoogleMap gmap) {
+	public static void firstPoint(LatLng firstPoint, GoogleMap gmap) {
 		points.add(firstPoint);
 	}
 	
