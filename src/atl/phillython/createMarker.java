@@ -7,7 +7,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 public class createMarker
 {
-	public static MarkerOptions choose(double latitude, double longitude, String name, String snipp)
+	public MarkerOptions choose(double latitude, double longitude, String name, String snipp)
 	{
 		BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.historical_marker);
 		return new MarkerOptions()

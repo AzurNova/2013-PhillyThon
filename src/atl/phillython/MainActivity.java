@@ -1,6 +1,7 @@
 package atl.phillython;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -12,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 >>>>>>> PointsTest
+=======
+>>>>>>> parent of 944eab5... points test working
 import android.content.Context;
 import android.content.Intent;
 import android.location.Criteria;
@@ -36,6 +39,9 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> parent of 944eab5... points test working
 public class MainActivity extends FragmentActivity implements LocationListener{
     private GoogleMap googleMap;
     private TextView latitudeField;
@@ -45,14 +51,21 @@ public class MainActivity extends FragmentActivity implements LocationListener{
     private PolylineOptions rectOptions;
     private Polyline polyline;
     
+<<<<<<< HEAD
+=======
+    
+>>>>>>> parent of 944eab5... points test working
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
+<<<<<<< HEAD
         //notification
         createPersistentNotification();
         
+=======
+>>>>>>> parent of 944eab5... points test working
         latitudeField = (TextView)findViewById(R.id.TextView02);
         longitudeField = (TextView)findViewById(R.id.TextView04);
         locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
@@ -107,14 +120,18 @@ public class MainActivity extends FragmentActivity implements LocationListener{
              
             // adding marker
             Marker test = googleMap.addMarker(marker);
+<<<<<<< HEAD
             
             //notif.createPersistentNotification();
+=======
+>>>>>>> parent of 944eab5... points test working
         }
     }
     
     /**
      * Location Stuff
      */
+<<<<<<< HEAD
 =======
 public class MainActivity extends FragmentActivity implements
 		LocationListener {
@@ -224,108 +241,106 @@ public class MainActivity extends FragmentActivity implements
 	 * Location Stuff
 	 */
 >>>>>>> PointsTest
+=======
+>>>>>>> parent of 944eab5... points test working
 	@Override
 	public void onLocationChanged(Location location) {
 		// TODO Auto-generated method stub
 		double lat = (double) (location.getLatitude());
-		double lng = (double) (location.getLongitude());
+		double lng = (double) (location.getLongitude());		
 		latitudeField.setText(String.valueOf(lat));
 		longitudeField.setText(String.valueOf(lng));
 		
 <<<<<<< HEAD
+<<<<<<< HEAD
 		createNotification("You Moved!", "This is a test btw");
+=======
+>>>>>>> parent of 944eab5... points test working
 //		if (polyline != null) {
 //			polyline.remove();
 //		}
 //		rectOptions.add(new LatLng(lat, lng));
 //		rectOptions.color(Color.BLUE);
 //		polyline = googleMap.addPolyline(rectOptions);
+<<<<<<< HEAD
 		
 		
 =======
 		//clearMarkers();
 		//sgetMarkersFromPoints(location);
 >>>>>>> PointsTest
+=======
+>>>>>>> parent of 944eab5... points test working
 		
-		// if (polyline != null) {
-		// polyline.remove();
-		// }
-		// rectOptions.add(new LatLng(lat, lng));
-		// rectOptions.color(Color.BLUE);
-		// polyline = googleMap.addPolyline(rectOptions);
-
-		// PathTracker.updatePoints(new LatLng(lat,lng), googleMap);
-		// Location myLocation = googleMap.getMyLocation();
-		// if(myLocation == null) {
-		// Toast.makeText(getApplicationContext(), "My location not available",
-		// Toast.LENGTH_LONG).show();
-		// } else {
-		// PolylineOptions polylineOptions = new PolylineOptions();
-		// polylineOptions.add(new LatLng(myLocation.getLatitude(),
-		// myLocation.getLongitude()));
-		// googleMap.addPolyline(polylineOptions);
-		// }
-		Log.i("locationchange", "changed location");
+		
+		
+//        PathTracker.updatePoints(new LatLng(lat,lng), googleMap);
+//	    Location myLocation = googleMap.getMyLocation();
+//	    if(myLocation == null) {
+//	    	Toast.makeText(getApplicationContext(), "My location not available", Toast.LENGTH_LONG).show();
+//	    } else {
+//			PolylineOptions polylineOptions = new PolylineOptions();
+//			polylineOptions.add(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
+//			googleMap.addPolyline(polylineOptions);
+//		}
+		Log.i("locationchange","changed location");
 	}
 
 	@Override
 	public void onProviderDisabled(String arg0) {
 		// TODO Auto-generated method stub
-		Toast.makeText(this, "Disabled provider " + provider,
-				Toast.LENGTH_SHORT).show();
+	    Toast.makeText(this, "Disabled provider " + provider,
+	            Toast.LENGTH_SHORT).show();		
 	}
 
 	@Override
 	public void onProviderEnabled(String arg0) {
 		// TODO Auto-generated method stub
-		Toast.makeText(this, "Enabled new provider " + provider,
-				Toast.LENGTH_SHORT).show();
+	    Toast.makeText(this, "Enabled new provider " + provider,
+	            Toast.LENGTH_SHORT).show();
 	}
 
 	@Override
 	public void onStatusChanged(String arg0, int arg1, Bundle arg2) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	protected void onPause() {
 		// TODO Auto-generated method stub
 		super.onPause();
-		//clearMarkers();
 		locationManager.removeUpdates(this);
 	}
-
-	/**
-	 * 
-	 * Long click to make markers - test
-	 * 
-	 */
-	public class onMapLongClickListener implements OnMapLongClickListener {
+ 
+    /**
+     * 
+     * Long click to make markers - test
+     *
+     */
+    public class onMapLongClickListener implements OnMapLongClickListener{
 		int markers = 0;
-
 		@Override
 		public void onMapLongClick(LatLng arg0) {
-			// create marker
-			markers++;
-			MarkerOptions marker = new MarkerOptions().position(arg0).title(
-					"marker no " + markers);
-			// adding marker
-			googleMap.addMarker(marker);
+			 // create marker
+			markers ++;
+            MarkerOptions marker = new MarkerOptions().position(arg0).title("marker no " + markers);
+            // adding marker
+            googleMap.addMarker(marker);
 		}
-	}
-
-	private void initializeClickListener() {
-		googleMap.setOnMapLongClickListener(new onMapLongClickListener());
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		initializeMap();
-		locationManager.requestLocationUpdates(provider, 400, 1, this);
-	}
-
+    }
+    
+    private void initializeClickListener(){
+    	googleMap.setOnMapLongClickListener(new onMapLongClickListener());
+    }
+    
+    @Override
+    protected void onResume() {
+        super.onResume();
+        initilizeMap();
+        locationManager.requestLocationUpdates(provider, 400, 1, this);
+    }
+ 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
