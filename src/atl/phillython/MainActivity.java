@@ -1,7 +1,9 @@
 package atl.phillython;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import android.annotation.SuppressLint;
 import android.app.Notification;
@@ -10,6 +12,7 @@ import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -27,6 +30,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -170,34 +174,7 @@ public class MainActivity extends FragmentActivity implements LocationListener {
 		if (googleMap != null && location != null && locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER) != null)
 			googleMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude())));
 
-		// if (polyline != null) {
-		// polyline.remove();
-		// }
-		// rectOptions.add(new LatLng(lat, lng));
-		// rectOptions.color(Color.BLUE);
-		// polyline = googleMap.addPolyline(rectOptions);
 
-		// clearMarkers();
-		// sgetMarkersFromPoints(location);
-
-		// if (polyline != null) {
-		// polyline.remove();
-		// }
-		// rectOptions.add(new LatLng(lat, lng));
-		// rectOptions.color(Color.BLUE);
-		// polyline = googleMap.addPolyline(rectOptions);
-
-		// PathTracker.updatePoints(new LatLng(lat,lng), googleMap);
-		// Location myLocation = googleMap.getMyLocation();
-		// if(myLocation == null) {
-		// Toast.makeText(getApplicationContext(), "My location not available",
-		// Toast.LENGTH_LONG).show();
-		// } else {
-		// PolylineOptions polylineOptions = new PolylineOptions();
-		// polylineOptions.add(new LatLng(myLocation.getLatitude(),
-		// myLocation.getLongitude()));
-		// googleMap.addPolyline(polylineOptions);
-		// }
 		Log.i("locationchange", "changed location");
 	}
 
@@ -231,12 +208,35 @@ public class MainActivity extends FragmentActivity implements LocationListener {
 
 	/**
 	 * 
-	 * Long click to make markers - test
+	 * Long click to make markers and route- test
 	 * 
 	 */
+	public void handleGetDirectionsResult(ArrayList directionPoints) {
+		// TODO Auto-generated method stub
+	    Polyline newPolyline;
+	    PolylineOptions rectLine = new PolylineOptions().width(3).color(Color.BLUE);
+	    for(int i = 0 ; i < directionPoints.size() ; i++)
+	    {
+	        rectLine.add((LatLng) directionPoints.get(i));
+	    }
+	    newPolyline = googleMap.addPolyline(rectLine);
+	}
+
+	public void findDirections(double fromPositionDoubleLat, double fromPositionDoubleLong, double toPositionDoubleLat, double toPositionDoubleLong, String mode)
+	{
+	    Map<String, String> map = new HashMap<String, String>();
+	    map.put(GetDirectionsAsyncTask.USER_CURRENT_LAT, String.valueOf(fromPositionDoubleLat));
+	    map.put(GetDirectionsAsyncTask.USER_CURRENT_LONG, String.valueOf(fromPositionDoubleLong));
+	    map.put(GetDirectionsAsyncTask.DESTINATION_LAT, String.valueOf(toPositionDoubleLat));
+	    map.put(GetDirectionsAsyncTask.DESTINATION_LONG, String.valueOf(toPositionDoubleLong));
+	    map.put(GetDirectionsAsyncTask.DIRECTIONS_MODE, mode);
+	 
+	    GetDirectionsAsyncTask asyncTask = new GetDirectionsAsyncTask(this);
+	    asyncTask.execute(map);
+	}
+	
 	public class onMapLongClickListener implements OnMapLongClickListener {
 		int markers = 0;
-
 		@Override
 		public void onMapLongClick(LatLng arg0) {
 			// create marker
@@ -245,6 +245,9 @@ public class MainActivity extends FragmentActivity implements LocationListener {
 					"marker no " + markers);
 			// adding marker
 			googleMap.addMarker(marker);
+			Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+			findDirections(location.getLatitude(),location.getLongitude(),
+					arg0.latitude, arg0.longitude, GMapV2Direction.MODE_DRIVING );
 		}
 	}
 
@@ -315,4 +318,6 @@ public class MainActivity extends FragmentActivity implements LocationListener {
 		NotificationManager nM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		nM.notify(3221 + i++, notif);
 	}
+
+
 }
