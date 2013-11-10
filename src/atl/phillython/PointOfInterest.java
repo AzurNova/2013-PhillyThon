@@ -48,6 +48,7 @@ public class PointOfInterest {
 	}
 	
 	public static PointOfInterest pullFromData(Scanner file) {
+		System.out.println("pulling from data");
 		PointOfInterest poi = new PointOfInterest();
 		if (!file.hasNext()) {
 			if (DEBUG)
@@ -57,16 +58,19 @@ public class PointOfInterest {
 		}
 		try {
 			poi.setName(file.nextLine());
+			System.out.println("read name");
 			poi.setDescription(file.nextLine());
+			System.out.println("read description");
 			double lat = Double.parseDouble(file.nextLine());
+			System.out.println(lat);
 			double lng = Double.parseDouble(file.nextLine());
+			System.out.println(lng);
 			poi.setPosition(new LatLng(lat, lng));
 			while (true) {
 				String line = file.nextLine();
-				if (line == SEPARATOR) {
+				if (line.equals(SEPARATOR)) {
 					if (DEBUG)
-						System.out
-								.println("POI building: Reached separator, breaking from tag sweep.");
+						System.out.println("POI building: Reached separator, breaking from tag sweep.");
 					break;
 				}
 				poi.getTags().add(line);
@@ -137,5 +141,9 @@ public class PointOfInterest {
 
 	public void setTags(List<String> tags) {
 		this.tags = tags;
+	}
+	
+	public String toString() {
+		return name;
 	}
 }
