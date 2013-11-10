@@ -58,7 +58,7 @@ public class Infoview extends Activity {
 			}
 		}
 		Marker a = googleMap.addMarker(createMarker.choose(lat, lng, name, desc));
-		googleMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(lat, lng)));
+		googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), 17));
 	}
 
 }

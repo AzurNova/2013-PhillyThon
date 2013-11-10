@@ -131,10 +131,14 @@ public class MainActivity extends FragmentActivity implements
                                                 "Sorry! unable to create maps", Toast.LENGTH_SHORT)
                                                 .show();
                         }
+                        else
+                        {
+                        	googleMap.setMyLocationEnabled(true);
                         
-                        googleMap.setMyLocationEnabled(true);
-                        
-                        getMarkersFromPoints(locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER));
+                        	getMarkersFromPoints(locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER));
+                        	
+                        	googleMap.moveCamera(CameraUpdateFactory.zoomTo(17));
+                        }
                 
                 }
         }
@@ -157,7 +161,7 @@ public class MainActivity extends FragmentActivity implements
                 for (int i = 0; i < pois.size(); i++) {
                         createNotification(pois.get(i).getName(), pois.get(i).getDescription(), pois.get(i).getPosition().latitude, pois.get(i).getPosition().longitude);
                 }
-                //googleMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(lat, lng)));       
+                googleMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(lat, lng)));       
                 
 //                if (polyline != null) {
 //                        polyline.remove();
@@ -288,7 +292,7 @@ public class MainActivity extends FragmentActivity implements
                 intent.putExtra("desc", description);
                 intent.putExtra("lat", latitude);
                 intent.putExtra("lng", longitude);
-                PendingIntent contentIntent = PendingIntent.getActivity(this, 0, intent, 0);
+                PendingIntent contentIntent = PendingIntent.getActivity(this, i, intent, 0);
                 
                 Notification notif = new NotificationCompat.Builder(this)
                                         .setContentTitle(title)
