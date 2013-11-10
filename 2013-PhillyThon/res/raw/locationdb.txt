@@ -1,0 +1,25 @@
+University of Pennsylvania
+The University of Pennsylvania (aka Penn or UPenn) is a private research university. One of the Ivy League and one of the nine original Colonial Colleges. It was founded by Benjamin Franklin and offers a broad range of academic departments.
+39.953885
+-75.193048
+university
+school
+###
+The Woodlands (Cemetary)
+The Woodlands is a National Historic Landmark. In 1840 it was transformed into a rural cemetary with an arboretum of over 1,000 trees. It was originally a 250-acre tract, purchased in 1735 by Andrew Hamilton. A famous lawyer.
+39.946944
+-75.203056
+cemetary
+grave
+estate
+hamilton
+###
+Franklin Field
+UPenn's stadium for a variety of sports and activities. It is the home of the Penn Relays and the former home of the Philadelphia Eagles of the NFL. It was dedicated on April 20, 1895, and is deemed by the NCAA as the oldest stadium still operating for football and the site for the nation's first scoreboard in 1895.
+39.95
+-75.19
+football
+sport
+stadium
+activities
+###
