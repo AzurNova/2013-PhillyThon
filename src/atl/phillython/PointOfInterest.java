@@ -14,10 +14,10 @@ public class PointOfInterest {
 
 	public static String SEPARATOR = "###";
 
-	public String name;
-	public String description;
-	public LatLng position;
-	public List<String> tags;
+	private String name;
+	private String description;
+	private LatLng position;
+	private List<String> tags;
 
 	public PointOfInterest() {
 		this("ERR:NAME_MISSING", "ERR:DESCRIPTION_MISSING", new LatLng(0, 0),
@@ -27,10 +27,10 @@ public class PointOfInterest {
 	public PointOfInterest(String name, String desc, LatLng pos,
 			List<String> tags) {
 		super();
-		this.name = name;
-		this.description = desc;
-		this.position = pos;
-		this.tags = tags;
+		this.setName(name);
+		this.setDescription(desc);
+		this.setPosition(pos);
+		this.setTags(tags);
 	}
 	
 	public static void writePointToData(PointOfInterest poi, String filename){
@@ -56,11 +56,11 @@ public class PointOfInterest {
 			return null;
 		}
 		try {
-			poi.name = file.nextLine();
-			poi.description = file.nextLine();
+			poi.setName(file.nextLine());
+			poi.setDescription(file.nextLine());
 			double lat = Double.parseDouble(file.nextLine());
 			double lng = Double.parseDouble(file.nextLine());
-			poi.position = new LatLng(lat, lng);
+			poi.setPosition(new LatLng(lat, lng));
 			while (true) {
 				String line = file.nextLine();
 				if (line == SEPARATOR) {
@@ -69,7 +69,7 @@ public class PointOfInterest {
 								.println("POI building: Reached separator, breaking from tag sweep.");
 					break;
 				}
-				poi.tags.add(line);
+				poi.getTags().add(line);
 			}
 		} catch (Exception e) {
 			if (DEBUG) {
@@ -89,12 +89,12 @@ public class PointOfInterest {
 	public void writeToData(PrintWriter outfile) {
 
 		try {
-			outfile.println(this.name);
-			outfile.println(this.description);
-			outfile.println(this.position.latitude);
-			outfile.println(this.position.longitude);
-			for(int i = 0; i < this.tags.size(); i++){
-				outfile.println(this.tags.get(i));
+			outfile.println(this.getName());
+			outfile.println(this.getDescription());
+			outfile.println(this.getPosition().latitude);
+			outfile.println(this.getPosition().longitude);
+			for(int i = 0; i < this.getTags().size(); i++){
+				outfile.println(this.getTags().get(i));
 			}
 			outfile.println(SEPARATOR);
 			
@@ -105,5 +105,37 @@ public class PointOfInterest {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public LatLng getPosition() {
+		return position;
+	}
+
+	public void setPosition(LatLng position) {
+		this.position = position;
+	}
+
+	public List<String> getTags() {
+		return tags;
+	}
+
+	public void setTags(List<String> tags) {
+		this.tags = tags;
 	}
 }

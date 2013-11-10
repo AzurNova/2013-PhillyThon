@@ -77,9 +77,9 @@ public class MainActivity extends FragmentActivity implements LocationListener{
             double latitude = 39.920955;
             double longitude = -75.183258;
             String name = "Hi there";
-             
+            String snippet = "Very descriptive, this is";
             // create marker
-            MarkerOptions marker = new createMarker().choose(latitude, longitude, name);
+            MarkerOptions marker = new createMarker().choose(latitude, longitude, name, snippet);
              
             // adding marker
             Marker test = googleMap.addMarker(marker);

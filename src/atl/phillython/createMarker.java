@@ -7,13 +7,14 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 public class createMarker
 {
-	public MarkerOptions choose(double latitude, double longitude, String name)
+	public MarkerOptions choose(double latitude, double longitude, String name, String snipp)
 	{
 		BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.historical_marker);
 		return new MarkerOptions()
 			.position(new LatLng(latitude, longitude))
 			.title(name)
 			.flat(true)
-			.icon(icon);
+			.icon(icon)
+			.snippet(snipp);
 	}
 }
