@@ -2,6 +2,7 @@ package atl.phillython;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.widget.Toast;
 
@@ -11,7 +12,7 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MainActivity extends Activity {
+public class MainActivity extends FragmentActivity {
     private GoogleMap googleMap;
     
     public class onMapLongClickListener implements OnMapLongClickListener{
@@ -60,6 +61,9 @@ public class MainActivity extends Activity {
                         "Sorry! unable to create maps", Toast.LENGTH_SHORT)
                         .show();
             }
+            
+            googleMap.setMyLocationEnabled(true);
+            
             // latitude and longitude
             double latitude = 39.920955;
             double longitude = -75.183258;
