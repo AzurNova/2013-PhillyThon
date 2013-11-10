@@ -9,3 +9,4 @@ project.properties
 bin/*
 #We don't care about the windows thumbnail cache
 Thumbs.db
+bin/classes/atl/phillython/MainActivity.class
