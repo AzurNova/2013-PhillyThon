@@ -1,17 +1,13 @@
 package atl.phillython;
 
-<<<<<<< HEAD
 import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
-=======
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
->>>>>>> PointsTest
 import android.content.Context;
 import android.content.Intent;
 import android.location.Criteria;
@@ -35,87 +31,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-<<<<<<< HEAD
-public class MainActivity extends FragmentActivity implements LocationListener{
-    private GoogleMap googleMap;
-    private TextView latitudeField;
-    private TextView longitudeField;
-    private LocationManager locationManager;
-    private String provider;
-    private PolylineOptions rectOptions;
-    private Polyline polyline;
-    
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        
-        //notification
-        createPersistentNotification();
-        
-        latitudeField = (TextView)findViewById(R.id.TextView02);
-        longitudeField = (TextView)findViewById(R.id.TextView04);
-        locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-        Criteria criteria = new Criteria();
-        provider = locationManager.getBestProvider(criteria, false);
-        Location location = locationManager.getLastKnownLocation(provider);
-        
- //       PathTracker.firstPoint(new LatLng(location.getLatitude(), location.getLongitude()), googleMap);
-        
-        if (location != null) {
-        	System.out.println("Provider " + provider + " has been selected.");
-        	onLocationChanged(location);
-        } else {
-        	latitudeField.setText("Location not available");
-        	longitudeField.setText("Location not available");
-        }
-        
-        try {
-            // Loading map
-            initilizeMap();
-            initializeClickListener();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
- 
-    }
- 
-    /**
-     * function to load map. If map is not created it will create it for you
-     * */
-    private void initilizeMap() {
-        if (googleMap == null) {
-            googleMap = ((MapFragment) getFragmentManager().findFragmentById(
-                    R.id.map)).getMap();
- 
-            // check if map is created successfully or not
-            if (googleMap == null) {
-                Toast.makeText(getApplicationContext(),
-                        "Sorry! unable to create maps", Toast.LENGTH_SHORT)
-                        .show();
-            }
-            
-            googleMap.setMyLocationEnabled(true);
-            
-            // latitude and longitude
-            double latitude = 39.920955;
-            double longitude = -75.183258;
-            String name = "Hi there";
-            String snippet = "Very descriptive, this is";
-            // create marker
-            MarkerOptions marker = new createMarker().choose(latitude, longitude, name, snippet);
-             
-            // adding marker
-            Marker test = googleMap.addMarker(marker);
-            
-            //notif.createPersistentNotification();
-        }
-    }
-    
-    /**
-     * Location Stuff
-     */
-=======
 public class MainActivity extends FragmentActivity implements
 		LocationListener {
 	private GoogleMap googleMap;
@@ -129,14 +44,15 @@ public class MainActivity extends FragmentActivity implements
 	private List<Marker> pointMarkers;
 
 	private static final String DATAFILENAME = "locationdb.txt";
-	private static final double MAX_DISTANCE = 1000.0;
+	private static final double MAX_DISTANCE = 100.0;
+	private int i = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		
+        createPersistentNotification();
 		
 		latitudeField = (TextView) findViewById(R.id.TextView02);
 		longitudeField = (TextView) findViewById(R.id.TextView04);
@@ -223,7 +139,7 @@ public class MainActivity extends FragmentActivity implements
 	/**
 	 * Location Stuff
 	 */
->>>>>>> PointsTest
+
 	@Override
 	public void onLocationChanged(Location location) {
 		// TODO Auto-generated method stub
@@ -232,8 +148,13 @@ public class MainActivity extends FragmentActivity implements
 		latitudeField.setText(String.valueOf(lat));
 		longitudeField.setText(String.valueOf(lng));
 		
-<<<<<<< HEAD
-		createNotification("You Moved!", "This is a test btw");
+		List<PointOfInterest> pois = pointCollector.getNearbyPoints(new LatLng(
+				location.getLatitude(), location.getLongitude()), 100);
+		for (int i = 0; i < pois.size(); i++) {
+			createNotification(pois.get(i).getName(), pois.get(i).getDescription());
+		}
+			
+		
 //		if (polyline != null) {
 //			polyline.remove();
 //		}
@@ -242,10 +163,8 @@ public class MainActivity extends FragmentActivity implements
 //		polyline = googleMap.addPolyline(rectOptions);
 		
 		
-=======
 		//clearMarkers();
 		//sgetMarkersFromPoints(location);
->>>>>>> PointsTest
 		
 		// if (polyline != null) {
 		// polyline.remove();
@@ -372,6 +291,6 @@ public class MainActivity extends FragmentActivity implements
 		stackBuilder.addNextIntent(intent);
 		
 		NotificationManager nM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE); 
-		nM.notify(1233, notif.build());
+		nM.notify(3221 + i++, notif.build());
 	}
 }
