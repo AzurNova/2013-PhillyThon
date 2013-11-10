@@ -1,0 +1,27 @@
+Name
+Description
+latitude
+longitude
+tag
+tag
+tag
+.
+.
+.
+###
+University of Pennsylvania
+The University of Pennsylvania (aka Penn or UPenn) is a private research university. One of the Ivy League and one of the nine original Colonial Colleges. It was founded by Benjamin Franklin and offers a broad range of academic departments.
+75.193048
+39.953885
+university
+school
+###
+The Woodlands (Cemetary)
+The Woodlands is a National Historic Landmark. In 1840 it was transformed into a rural cemetary with an arboretum of over 1,000 trees. It was originally a 250-acre tract, purchased in 1735 by Andrew Hamilton. A famous lawyer.
+75.203056
+39.946944
+cemetary
+grave
+estate
+hamilton
+###
