@@ -1,13 +1,13 @@
 package atl.phillython;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Criteria;
@@ -22,6 +22,8 @@ import android.view.Menu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
 import com.google.android.gms.maps.MapFragment;
@@ -52,7 +54,7 @@ public class MainActivity extends FragmentActivity implements
                 super.onCreate(savedInstanceState);
                 setContentView(R.layout.activity_main);
 
-        createPersistentNotification();
+                createPersistentNotification();
                 
                 latitudeField = (TextView) findViewById(R.id.TextView02);
                 longitudeField = (TextView) findViewById(R.id.TextView04);
@@ -105,6 +107,7 @@ public class MainActivity extends FragmentActivity implements
                         System.out.println(pois.get(i));
                         
                         Marker a = googleMap.addMarker(marker);
+                        
                 }
         }
 
@@ -128,7 +131,7 @@ public class MainActivity extends FragmentActivity implements
                                                 "Sorry! unable to create maps", Toast.LENGTH_SHORT)
                                                 .show();
                         }
-
+                        
                         googleMap.setMyLocationEnabled(true);
                         
                         getMarkersFromPoints(locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER));
@@ -150,11 +153,11 @@ public class MainActivity extends FragmentActivity implements
                 
                 initializePoints();
                 List<PointOfInterest> pois = pointCollector.getNearbyPoints(new LatLng(
-                                location.getLatitude(), location.getLongitude()), 100);
+                                location.getLatitude(), location.getLongitude()), 1000);
                 for (int i = 0; i < pois.size(); i++) {
-                        createNotification(pois.get(i).getName(), pois.get(i).getDescription());
+                        createNotification(pois.get(i).getName(), pois.get(i).getDescription(), pois.get(i).getPosition().latitude, pois.get(i).getPosition().longitude);
                 }
-                        
+                //googleMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(lat, lng)));       
                 
 //                if (polyline != null) {
 //                        polyline.remove();
@@ -234,6 +237,7 @@ public class MainActivity extends FragmentActivity implements
                         googleMap.addMarker(marker);
                 }
         }
+        
 
         private void initializeClickListener() {
                 googleMap.setOnMapLongClickListener(new onMapLongClickListener());
@@ -276,11 +280,14 @@ public class MainActivity extends FragmentActivity implements
                 nM.notify(1234, notif.build());
         }
         
-        @SuppressWarnings("deprecation")
         @SuppressLint("NewApi")
-        public void createNotification(String title, String description) {
-                Intent intent = new Intent(this, MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        public void createNotification(String title, String description, double latitude, double longitude) {
+                Intent intent = new Intent(this, Infoview.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.putExtra("name", title);
+                intent.putExtra("desc", description);
+                intent.putExtra("lat", latitude);
+                intent.putExtra("lng", longitude);
                 PendingIntent contentIntent = PendingIntent.getActivity(this, 0, intent, 0);
                 
                 Notification notif = new NotificationCompat.Builder(this)
@@ -288,9 +295,9 @@ public class MainActivity extends FragmentActivity implements
                                         .setContentText(description)
                                         .setContentIntent(contentIntent)
                                         .setSmallIcon(R.drawable.loc_notif).build();
-                TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-                stackBuilder.addParentStack(MainActivity.class);
-                stackBuilder.addNextIntent(intent);
+                //TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+                //stackBuilder.addParentStack(MainActivity.class);
+                //stackBuilder.addNextIntent(intent);
                 
                 notif.flags |= Notification.FLAG_AUTO_CANCEL;
                 NotificationManager nM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE); 

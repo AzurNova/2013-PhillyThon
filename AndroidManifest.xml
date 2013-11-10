@@ -37,14 +37,22 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="atl.phillython.Infoview"
+            android:label="Point of Interest" >
+            <intent-filter>
+                <action android:name="atl.phillython.Infoview" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyD6Y2Khxu4hR4xP5Tlye5lPR56Idgm4JjM" />
+            android:value="AIzaSyDhHJ5EGXAiPqrJjuZjEKI-H9qolZgoZF4" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-        
     </application>
 
 </manifest>
