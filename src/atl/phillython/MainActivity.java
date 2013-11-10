@@ -1,6 +1,7 @@
 package atl.phillython;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -22,6 +23,8 @@ import android.view.Menu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
 import com.google.android.gms.maps.MapFragment;
@@ -31,8 +34,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-public class MainActivity extends FragmentActivity implements
-		LocationListener {
+public class MainActivity extends FragmentActivity implements LocationListener {
 	private GoogleMap googleMap;
 	private TextView latitudeField;
 	private TextView longitudeField;
@@ -51,27 +53,61 @@ public class MainActivity extends FragmentActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
-        createPersistentNotification();
 		
-		latitudeField = (TextView) findViewById(R.id.TextView02);
-		longitudeField = (TextView) findViewById(R.id.TextView04);
-		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		Criteria criteria = new Criteria();
-		provider = locationManager.getBestProvider(criteria, false);
-		Location location = locationManager.getLastKnownLocation(provider);
-
-		// PathTracker.firstPoint(new LatLng(location.getLatitude(),
-		// location.getLongitude()), googleMap);
-
-		if (location != null) {
-			System.out.println("Provider " + provider + " has been selected.");
-			onLocationChanged(location);
+		createPersistentNotification();
+		
+		int status = GooglePlayServicesUtil
+				.isGooglePlayServicesAvailable(getBaseContext());
+		if (status != ConnectionResult.SUCCESS) {
+			int requestCode = 10;
+			Dialog dialog = GooglePlayServicesUtil.getErrorDialog(status, this,
+					requestCode);
+			dialog.show();
 		} else {
-			latitudeField.setText("Location not available");
-			longitudeField.setText("Location not available");
-		}
 
+			latitudeField = (TextView) findViewById(R.id.TextView02);
+			longitudeField = (TextView) findViewById(R.id.TextView04);
+			locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+			Criteria criteria = new Criteria();
+			provider = locationManager.getBestProvider(criteria, false);
+			Location location = locationManager.getLastKnownLocation(provider);
+
+			LocationListener locationListener = new LocationListener() {
+				
+				@Override
+				public void onLocationChanged(Location location) {
+					System.out.println("Location changed!");
+				}
+
+				@Override
+				public void onProviderDisabled(String provider) {
+					System.out.println("Provider " + provider + " disabled.");
+				}
+
+				@Override
+				public void onProviderEnabled(String provider) {
+					System.out.println("Provider " + provider + " enabled.");
+				}
+
+				@Override
+				public void onStatusChanged(String provider, int status,
+						Bundle extras) {
+					System.out.println("Status changed! Provider " + provider + " status " + status);
+				}
+			};
+			
+			locationManager.requestLocationUpdates(provider, 20000, 0, locationListener);
+
+			if (location != null) {
+				System.out.println("Provider " + provider
+						+ " has been selected.");
+				onLocationChanged(location);
+			} else {
+				latitudeField.setText("Location not available");
+				longitudeField.setText("Location not available");
+			}
+
+		}
 		try {
 			// Loading map
 			initializePoints();
@@ -88,7 +124,8 @@ public class MainActivity extends FragmentActivity implements
 	 * Loads points up from the data file.
 	 */
 	private void initializePoints() {
-		pointCollector = new POI_Collector(getResources().openRawResource(R.raw.locationdb));
+		pointCollector = new POI_Collector(getResources().openRawResource(
+				R.raw.locationdb));
 		System.out.println(pointCollector.getPoints());
 		pointMarkers = new ArrayList<Marker>();
 	}
@@ -99,19 +136,20 @@ public class MainActivity extends FragmentActivity implements
 		System.out.println(pois);
 		for (int i = 0; i < pois.size(); i++) {
 			System.out.println(pois.get(i).getPosition().latitude);
-			MarkerOptions marker = createMarker.choose(pois.get(i).getPosition().latitude,
+			MarkerOptions marker = createMarker.choose(pois.get(i)
+					.getPosition().latitude,
 					pois.get(i).getPosition().longitude, pois.get(i).getName(),
 					pois.get(i).getDescription());
 			System.out.println(pois.get(i));
-			
+
 			Marker a = googleMap.addMarker(marker);
 		}
 	}
 
 	private void clearMarkers() {
-		//for (int i = 0; i < pointMarkers.size(); i++) {
-			//pointMarkers.get(i).remove();
-		//}
+		// for (int i = 0; i < pointMarkers.size(); i++) {
+		// pointMarkers.get(i).remove();
+		// }
 	}
 
 	/**
@@ -130,9 +168,9 @@ public class MainActivity extends FragmentActivity implements
 			}
 
 			googleMap.setMyLocationEnabled(true);
-			
+
 			getMarkersFromPoints(locationManager.getLastKnownLocation(provider));
-		
+
 		}
 	}
 
@@ -147,44 +185,15 @@ public class MainActivity extends FragmentActivity implements
 		double lng = (double) (location.getLongitude());
 		latitudeField.setText(String.valueOf(lat));
 		longitudeField.setText(String.valueOf(lng));
-		
+
 		initializePoints();
 		List<PointOfInterest> pois = pointCollector.getNearbyPoints(new LatLng(
 				location.getLatitude(), location.getLongitude()), 100);
 		for (int i = 0; i < pois.size(); i++) {
-			createNotification(pois.get(i).getName(), pois.get(i).getDescription());
+			createNotification(pois.get(i).getName(), pois.get(i)
+					.getDescription());
 		}
-			
-		
-//		if (polyline != null) {
-//			polyline.remove();
-//		}
-//		rectOptions.add(new LatLng(lat, lng));
-//		rectOptions.color(Color.BLUE);
-//		polyline = googleMap.addPolyline(rectOptions);
-		
-		
-		//clearMarkers();
-		//sgetMarkersFromPoints(location);
-		
-		// if (polyline != null) {
-		// polyline.remove();
-		// }
-		// rectOptions.add(new LatLng(lat, lng));
-		// rectOptions.color(Color.BLUE);
-		// polyline = googleMap.addPolyline(rectOptions);
 
-		// PathTracker.updatePoints(new LatLng(lat,lng), googleMap);
-		// Location myLocation = googleMap.getMyLocation();
-		// if(myLocation == null) {
-		// Toast.makeText(getApplicationContext(), "My location not available",
-		// Toast.LENGTH_LONG).show();
-		// } else {
-		// PolylineOptions polylineOptions = new PolylineOptions();
-		// polylineOptions.add(new LatLng(myLocation.getLatitude(),
-		// myLocation.getLongitude()));
-		// googleMap.addPolyline(polylineOptions);
-		// }
 		Log.i("locationchange", "changed location");
 	}
 
@@ -212,7 +221,7 @@ public class MainActivity extends FragmentActivity implements
 	protected void onPause() {
 		// TODO Auto-generated method stub
 		super.onPause();
-		//clearMarkers();
+		// clearMarkers();
 		locationManager.removeUpdates(this);
 	}
 
@@ -252,48 +261,50 @@ public class MainActivity extends FragmentActivity implements
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
-	
-	//-----------------------------------------------------------------------
-	//--------------------------Notifications--------------------------------
+
+	// -----------------------------------------------------------------------
+	// --------------------------Notifications--------------------------------
 	@SuppressLint("NewApi")
 	@SuppressWarnings("deprecation")
 	public void createPersistentNotification() {
 		Intent intent = new Intent(this, MainActivity.class);
-		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, intent, 0);
-		
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+				| Intent.FLAG_ACTIVITY_SINGLE_TOP);
+		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+				intent, 0);
+
 		NotificationCompat.Builder notif = new NotificationCompat.Builder(this)
-					.setContentTitle("EducaTour is Running.")
-					.setContentText("You will recieve notifications live.")
-					.setSmallIcon(R.drawable.notification)
-					.setOngoing(true)
-					.setContentIntent(contentIntent);
+				.setContentTitle("EducaTour is Running.")
+				.setContentText("You will recieve notifications live.")
+				.setSmallIcon(R.drawable.notification).setOngoing(true)
+				.setContentIntent(contentIntent);
 		TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
 		stackBuilder.addParentStack(MainActivity.class);
 		stackBuilder.addNextIntent(intent);
-		
-		NotificationManager nM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE); 
+
+		NotificationManager nM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		nM.notify(1234, notif.build());
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	@SuppressLint("NewApi")
 	public void createNotification(String title, String description) {
 		Intent intent = new Intent(this, MainActivity.class);
-		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, intent, 0);
-		
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+				| Intent.FLAG_ACTIVITY_SINGLE_TOP);
+		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+				intent, 0);
+
 		Notification notif = new NotificationCompat.Builder(this)
-					.setContentTitle(title)
-					.setContentText(description)
-					.setContentIntent(contentIntent)
-					.setSmallIcon(R.drawable.loc_notif).build();
+				.setContentTitle(title).setContentText(description)
+				.setContentIntent(contentIntent)
+				.setSmallIcon(R.drawable.loc_notif).build();
 		TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
 		stackBuilder.addParentStack(MainActivity.class);
 		stackBuilder.addNextIntent(intent);
-		
+
 		notif.flags |= Notification.FLAG_AUTO_CANCEL;
-		NotificationManager nM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE); 
+		NotificationManager nM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		nM.notify(3221 + i++, notif);
 	}
 }
