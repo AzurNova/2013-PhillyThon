@@ -45,7 +45,7 @@ public class POI_Collector {
                                         getPoints().get(i).getPosition().latitude,
                                         getPoints().get(i).getPosition().longitude, res);
                         System.out.println(res[0]);
-                        if(res[0] / 1000000 < maxDistance){
+                        if(res[0] < maxDistance){
                                 System.out.println("close point!");
                                 nearPoints.add(getPoints().get(i));
                         }

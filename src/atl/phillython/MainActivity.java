@@ -59,7 +59,7 @@ public class MainActivity extends FragmentActivity implements
                 locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
                 Criteria criteria = new Criteria();
                 provider = locationManager.getBestProvider(criteria, false);
-                Location location = locationManager.getLastKnownLocation(provider);
+                Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
                 // PathTracker.firstPoint(new LatLng(location.getLatitude(),
                 // location.getLongitude()), googleMap);
@@ -131,7 +131,7 @@ public class MainActivity extends FragmentActivity implements
 
                         googleMap.setMyLocationEnabled(true);
                         
-                        getMarkersFromPoints(locationManager.getLastKnownLocation(provider));
+                        getMarkersFromPoints(locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER));
                 
                 }
         }
