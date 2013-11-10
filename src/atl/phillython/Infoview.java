@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
+import atl.phillython.createMarker.MarkerType;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -17,6 +18,7 @@ public class Infoview extends Activity {
 	private double lat;
 	private double lng;
 	private String name, desc;
+	private MarkerType icon;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +34,8 @@ public class Infoview extends Activity {
 		
 		name = i.getStringExtra("name");
 		desc = i.getStringExtra("desc");
+		
+		//icon = (MarkerType) i.getSerializableExtra("marker");
 		
 		locName.setText(name);
 		locDescription.setText(desc);

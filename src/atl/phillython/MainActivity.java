@@ -105,7 +105,8 @@ public class MainActivity extends FragmentActivity implements LocationListener {
 			MarkerOptions marker = createMarker.choose(pois.get(i)
 					.getPosition().latitude,
 					pois.get(i).getPosition().longitude, pois.get(i).getName(),
-					pois.get(i).getDescription());
+					pois.get(i).getDescription(), createMarker
+					.figureOutMarkerType(pois.get(i).getTags()));
 			System.out.println(pois.get(i));
 
 			Marker a = googleMap.addMarker(marker);
@@ -162,7 +163,7 @@ public class MainActivity extends FragmentActivity implements LocationListener {
 		for (int i = 0; i < pois.size(); i++) {
 			createNotification(pois.get(i).getName(), pois.get(i)
 					.getDescription(), pois.get(i).getPosition().latitude, pois
-					.get(i).getPosition().longitude);
+					.get(i).getPosition().longitude, pois.get(i).getTags());
 		}
 		
 		
@@ -291,13 +292,14 @@ public class MainActivity extends FragmentActivity implements LocationListener {
 
 	@SuppressLint("NewApi")
 	public void createNotification(String title, String description,
-			double latitude, double longitude) {
+			double latitude, double longitude, List<String> tags) {
 		Intent intent = new Intent(this, Infoview.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		intent.putExtra("name", title);
 		intent.putExtra("desc", description);
 		intent.putExtra("lat", latitude);
 		intent.putExtra("lng", longitude);
+		//intent.putExtra("marker", createMarker.figureOutMarkerType(tags));
 		PendingIntent contentIntent = PendingIntent.getActivity(this, i,
 				intent, 0);
 
