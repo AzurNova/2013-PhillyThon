@@ -16,7 +16,9 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import atl.phillython.*;
 
 public class MainActivity extends FragmentActivity implements LocationListener{
     private GoogleMap googleMap;
@@ -75,12 +77,13 @@ public class MainActivity extends FragmentActivity implements LocationListener{
             // latitude and longitude
             double latitude = 39.920955;
             double longitude = -75.183258;
+            String name = "Hi there";
              
             // create marker
-            MarkerOptions marker = new MarkerOptions().position(new LatLng(latitude, longitude)).title("Hello Maps ");
+            MarkerOptions marker = new createMarker().choose(latitude, longitude, name);
              
             // adding marker
-            googleMap.addMarker(marker);
+            Marker test = googleMap.addMarker(marker);
         }
     }
     
