@@ -1,13 +1,19 @@
 package atl.phillython;
 
+import android.annotation.SuppressLint;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.Context;
-import android.graphics.Color;
+import android.content.Intent;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.Menu;
 import android.widget.TextView;
@@ -31,11 +37,13 @@ public class MainActivity extends FragmentActivity implements LocationListener{
     private PolylineOptions rectOptions;
     private Polyline polyline;
     
-    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        
+        //notification
+        createPersistentNotification();
         
         latitudeField = (TextView)findViewById(R.id.TextView02);
         longitudeField = (TextView)findViewById(R.id.TextView04);
@@ -91,6 +99,8 @@ public class MainActivity extends FragmentActivity implements LocationListener{
              
             // adding marker
             Marker test = googleMap.addMarker(marker);
+            
+            //notif.createPersistentNotification();
         }
     }
     
@@ -105,6 +115,7 @@ public class MainActivity extends FragmentActivity implements LocationListener{
 		latitudeField.setText(String.valueOf(lat));
 		longitudeField.setText(String.valueOf(lng));
 		
+		createNotification("You Moved!", "This is a test btw");
 //		if (polyline != null) {
 //			polyline.remove();
 //		}
@@ -186,5 +197,47 @@ public class MainActivity extends FragmentActivity implements LocationListener{
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
+	}
+	
+	//-----------------------------------------------------------------------
+	//--------------------------Notifications--------------------------------
+	@SuppressLint("NewApi")
+	@SuppressWarnings("deprecation")
+	public void createPersistentNotification() {
+		Intent intent = new Intent(this, MainActivity.class);
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, intent, 0);
+		
+		NotificationCompat.Builder notif = new NotificationCompat.Builder(this)
+					.setContentTitle("EducaTour is Running.")
+					.setContentText("You will recieve notifications live.")
+					.setSmallIcon(R.drawable.notification)
+					.setOngoing(true)
+					.setContentIntent(contentIntent);
+		TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+		stackBuilder.addParentStack(MainActivity.class);
+		stackBuilder.addNextIntent(intent);
+		
+		NotificationManager nM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE); 
+		nM.notify(1234, notif.build());
+	}
+	
+	@SuppressWarnings("deprecation")
+	@SuppressLint("NewApi")
+	public void createNotification(String title, String description) {
+		Intent intent = new Intent(this, MainActivity.class);
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, intent, 0);
+		
+		NotificationCompat.Builder notif = new NotificationCompat.Builder(this)
+					.setContentTitle(title)
+					.setContentText(description)
+					.setSmallIcon(R.drawable.loc_notif);
+		TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+		stackBuilder.addParentStack(MainActivity.class);
+		stackBuilder.addNextIntent(intent);
+		
+		NotificationManager nM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE); 
+		nM.notify(1233, notif.build());
 	}
 }
