@@ -1,16 +1,34 @@
 package atl.phillython;
 
-import android.os.Bundle;
 import android.app.Activity;
+import android.os.Bundle;
 import android.view.Menu;
 import android.widget.Toast;
-import android.util.Log;
-import com.google.android.gms.maps.*;
+
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MainActivity extends Activity {
     private GoogleMap googleMap;
+    
+    public class onMapLongClickListener implements OnMapLongClickListener{
+		int markers = 0;
+		@Override
+		public void onMapLongClick(LatLng arg0) {
+			 // create marker
+			markers ++;
+            MarkerOptions marker = new MarkerOptions().position(arg0).title("marker no " + markers);
+            // adding marker
+            googleMap.addMarker(marker);
+		}
+    }
+    
+    private void initializeClickListener(){
+    	googleMap.setOnMapLongClickListener(new onMapLongClickListener());
+    }
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +38,7 @@ public class MainActivity extends Activity {
         try {
             // Loading map
             initilizeMap();
+            initializeClickListener();
  
         } catch (Exception e) {
             e.printStackTrace();
