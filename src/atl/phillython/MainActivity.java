@@ -18,7 +18,6 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import atl.phillython.*;
 
 public class MainActivity extends FragmentActivity implements LocationListener{
     private GoogleMap googleMap;
