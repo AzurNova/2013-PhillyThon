@@ -1,16 +1,15 @@
 package atl.phillython;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -23,6 +22,8 @@ import android.view.Menu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
 import com.google.android.gms.maps.MapFragment;
@@ -39,12 +40,10 @@ public class MainActivity extends FragmentActivity implements
         private TextView longitudeField;
         private LocationManager locationManager;
         private String provider;
-        private PolylineOptions polyOp;
+        private PolylineOptions rectOptions;
         private Polyline polyline;
         private POI_Collector pointCollector;
         private List<Marker> pointMarkers;
-        private Location currentLocation, lastLocation;
-        private int num = 1;
 
         private static final String DATAFILENAME = "locationdb.txt";
         private static final double MAX_DISTANCE = 1000.0;
@@ -66,16 +65,7 @@ public class MainActivity extends FragmentActivity implements
 
                 // PathTracker.firstPoint(new LatLng(location.getLatitude(),
                 // location.getLongitude()), googleMap);
-				try {
-					// Loading map
-					initializePoints();
-					initializeMap();
-					initializeClickListener();
-			
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-                
+
                 if (location != null) {
                         System.out.println("Provider " + provider + " has been selected.");
                         onLocationChanged(location);
@@ -84,7 +74,15 @@ public class MainActivity extends FragmentActivity implements
                         longitudeField.setText("Location not available");
                 }
 
+                try {
+                        // Loading map
+                        initializePoints();
+                        initializeMap();
+                        initializeClickListener();
 
+                } catch (Exception e) {
+                        e.printStackTrace();
+                }
 
         }
 
@@ -109,6 +107,7 @@ public class MainActivity extends FragmentActivity implements
                         System.out.println(pois.get(i));
                         
                         Marker a = googleMap.addMarker(marker);
+                        
                 }
         }
 
@@ -132,66 +131,63 @@ public class MainActivity extends FragmentActivity implements
                                                 "Sorry! unable to create maps", Toast.LENGTH_SHORT)
                                                 .show();
                         }
-
+                        
                         googleMap.setMyLocationEnabled(true);
                         
-                        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                        getMarkersFromPoints(location);
-                        
-                        currentLocation = new Location(location);
-                        System.out.println("initialization currentLocation" + currentLocation);
-                        
-		                polyOp = new PolylineOptions()
-		                  .add(new LatLng(location.getLatitude(),location.getLongitude()))
-		                  .width(5)
-		                  .color(Color.BLUE);
-                        polyline = googleMap.addPolyline(polyOp);
-                 
+                        getMarkersFromPoints(locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER));
+                
                 }
         }
 
         /**
          * Location Stuff
          */
-        public static LatLng locationToLatLng(Location loc) { 
-            if (loc != null) 
-                return new LatLng(loc.getLatitude(), loc.getLongitude());
-            return null;
-        }
+
         @Override
         public void onLocationChanged(Location location) {
                 // TODO Auto-generated method stub
-        		System.out.println("location Changed called");
-        		System.out.println("Hello");
-                System.out.println("lastLocation" + lastLocation);
-                System.out.println("currentLocation" + currentLocation);
-        		lastLocation = new Location(currentLocation);
-        		currentLocation = location;
-        		System.out.println("lastLocationafter" + lastLocation);
-                System.out.println("currentLocationafter" + currentLocation);
-                double lat = (double) (currentLocation.getLatitude());
-                double lng = (double) (currentLocation.getLongitude());
-                num++;
-                latitudeField.setText(String.valueOf(num));
- //               latitudeField.setText(String.valueOf(lat));
+                double lat = (double) (location.getLatitude());
+                double lng = (double) (location.getLongitude());
+                latitudeField.setText(String.valueOf(lat));
                 longitudeField.setText(String.valueOf(lng));
-                System.out.println("setText fields");
                 
                 initializePoints();
                 List<PointOfInterest> pois = pointCollector.getNearbyPoints(new LatLng(
-                                currentLocation.getLatitude(), currentLocation.getLongitude()), 100);
+                                location.getLatitude(), location.getLongitude()), 1000);
                 for (int i = 0; i < pois.size(); i++) {
-                        createNotification(pois.get(i).getName(), pois.get(i).getDescription());
+                        createNotification(pois.get(i).getName(), pois.get(i).getDescription(), pois.get(i).getPosition().latitude, pois.get(i).getPosition().longitude);
                 }
-                          
+                //googleMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(lat, lng)));       
                 
-                LatLng lastLatLng = locationToLatLng(lastLocation);
-                LatLng thisLatLng = locationToLatLng(currentLocation);
-                System.out.println(lastLatLng.latitude);
-                System.out.println(
-                thisLatLng.latitude);
-                googleMap.addPolyline(new PolylineOptions().add(lastLatLng).add(thisLatLng).width(8).color(Color.BLUE));
+//                if (polyline != null) {
+//                        polyline.remove();
+//                }
+//                rectOptions.add(new LatLng(lat, lng));
+//                rectOptions.color(Color.BLUE);
+//                polyline = googleMap.addPolyline(rectOptions);
                 
+                
+                //clearMarkers();
+                //sgetMarkersFromPoints(location);
+                
+                // if (polyline != null) {
+                // polyline.remove();
+                // }
+                // rectOptions.add(new LatLng(lat, lng));
+                // rectOptions.color(Color.BLUE);
+                // polyline = googleMap.addPolyline(rectOptions);
+
+                // PathTracker.updatePoints(new LatLng(lat,lng), googleMap);
+                // Location myLocation = googleMap.getMyLocation();
+                // if(myLocation == null) {
+                // Toast.makeText(getApplicationContext(), "My location not available",
+                // Toast.LENGTH_LONG).show();
+                // } else {
+                // PolylineOptions polylineOptions = new PolylineOptions();
+                // polylineOptions.add(new LatLng(myLocation.getLatitude(),
+                // myLocation.getLongitude()));
+                // googleMap.addPolyline(polylineOptions);
+                // }
                 Log.i("locationchange", "changed location");
         }
 
@@ -241,6 +237,7 @@ public class MainActivity extends FragmentActivity implements
                         googleMap.addMarker(marker);
                 }
         }
+        
 
         private void initializeClickListener() {
                 googleMap.setOnMapLongClickListener(new onMapLongClickListener());
@@ -283,11 +280,14 @@ public class MainActivity extends FragmentActivity implements
                 nM.notify(1234, notif.build());
         }
         
-        @SuppressWarnings("deprecation")
         @SuppressLint("NewApi")
-        public void createNotification(String title, String description) {
-                Intent intent = new Intent(this, MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        public void createNotification(String title, String description, double latitude, double longitude) {
+                Intent intent = new Intent(this, Infoview.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.putExtra("name", title);
+                intent.putExtra("desc", description);
+                intent.putExtra("lat", latitude);
+                intent.putExtra("lng", longitude);
                 PendingIntent contentIntent = PendingIntent.getActivity(this, 0, intent, 0);
                 
                 Notification notif = new NotificationCompat.Builder(this)
@@ -295,9 +295,9 @@ public class MainActivity extends FragmentActivity implements
                                         .setContentText(description)
                                         .setContentIntent(contentIntent)
                                         .setSmallIcon(R.drawable.loc_notif).build();
-                TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-                stackBuilder.addParentStack(MainActivity.class);
-                stackBuilder.addNextIntent(intent);
+                //TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+                //stackBuilder.addParentStack(MainActivity.class);
+                //stackBuilder.addNextIntent(intent);
                 
                 notif.flags |= Notification.FLAG_AUTO_CANCEL;
                 NotificationManager nM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE); 
