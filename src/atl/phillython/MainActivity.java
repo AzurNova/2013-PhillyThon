@@ -148,6 +148,7 @@ public class MainActivity extends FragmentActivity implements
 		latitudeField.setText(String.valueOf(lat));
 		longitudeField.setText(String.valueOf(lng));
 		
+		initializePoints();
 		List<PointOfInterest> pois = pointCollector.getNearbyPoints(new LatLng(
 				location.getLatitude(), location.getLongitude()), 100);
 		for (int i = 0; i < pois.size(); i++) {
@@ -282,15 +283,17 @@ public class MainActivity extends FragmentActivity implements
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, intent, 0);
 		
-		NotificationCompat.Builder notif = new NotificationCompat.Builder(this)
+		Notification notif = new NotificationCompat.Builder(this)
 					.setContentTitle(title)
 					.setContentText(description)
-					.setSmallIcon(R.drawable.loc_notif);
+					.setContentIntent(contentIntent)
+					.setSmallIcon(R.drawable.loc_notif).build();
 		TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
 		stackBuilder.addParentStack(MainActivity.class);
 		stackBuilder.addNextIntent(intent);
 		
+		notif.flags |= Notification.FLAG_AUTO_CANCEL;
 		NotificationManager nM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE); 
-		nM.notify(3221 + i++, notif.build());
+		nM.notify(3221 + i++, notif);
 	}
 }
