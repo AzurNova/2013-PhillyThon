@@ -27,7 +27,7 @@ public class createMarker {
 		case GENERAL:
 			// TODO different bitmaps
 			icon = BitmapDescriptorFactory
-					.fromResource(R.drawable.historical_marker);
+					.fromResource(R.drawable.generic_marker);
 			break;
 		case HISTORICAL:
 			icon = BitmapDescriptorFactory
@@ -35,11 +35,11 @@ public class createMarker {
 			break;
 		case NATURE:
 			icon = BitmapDescriptorFactory
-					.fromResource(R.drawable.historical_marker);
+					.fromResource(R.drawable.nature_marker);
 			break;
 		default:
 			icon = BitmapDescriptorFactory
-					.fromResource(R.drawable.historical_marker);
+					.fromResource(R.drawable.generic_marker);
 		}
 
 		return new MarkerOptions().position(new LatLng(latitude, longitude))
