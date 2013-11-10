@@ -9,6 +9,8 @@ import com.google.android.gms.maps.model.PolylineOptions;
 
 public class PathTracker {
 	static ArrayList<LatLng> points = new ArrayList<LatLng>();
+	static ArrayList<PointOfInterest> pois = new ArrayList<PointOfInterest>();
+	
 	
 	public static void fistPoint(LatLng firstPoint, GoogleMap gmap) {
 		points.add(firstPoint);
@@ -19,6 +21,14 @@ public class PathTracker {
 		PolylineOptions polylineOptions = new PolylineOptions();
 		polylineOptions.addAll(points);
 		Polyline route = gmap.addPolyline(polylineOptions);
+	}
+	
+	public static void storePOI(PointOfInterest poi) {
+		pois.add(poi);
+	}
+	
+	public static ArrayList<PointOfInterest> getPassedPOIs() {
+		return pois;
 	}
 	
 }
