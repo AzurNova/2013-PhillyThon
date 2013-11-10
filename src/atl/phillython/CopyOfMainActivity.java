@@ -79,7 +79,7 @@ public class CopyOfMainActivity extends FragmentActivity implements
 	 * Loads points up from the data file.
 	 */
 	private void initializePoints() {
-		pointCollector = new POI_Collector(DATAFILENAME);
+//		pointCollector = new POI_Collector(DATAFILENAME);
 		pointMarkers = new ArrayList<Marker>();
 	}
 
